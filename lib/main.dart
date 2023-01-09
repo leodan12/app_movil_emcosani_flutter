@@ -1,4 +1,5 @@
  
+import 'package:appemcosani/helpers/dependency_injection.dart';
 import 'package:appemcosani/pages/home_page.dart';
 import 'package:appemcosani/pages/login_page.dart';
 import 'package:appemcosani/pages/register_page.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/services.dart';
 
 
 void main() {
+  DependencyInjection.initialize();
   runApp( MyApp() );
 }
 

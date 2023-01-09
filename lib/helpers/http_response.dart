@@ -1,29 +1,34 @@
+import 'package:appemcosani/models/authentication_response.dart';
 import 'package:meta/meta.dart' show required;
 
-class HttpResponse {
-  final dynamic data;
+class HttpResponse<T> {
+  final T? data;
   final HttpError error;
 
   HttpResponse(this.data, this.error);
 
 
-  static HttpResponse success(dynamic data) {
-   HttpError error =  HttpError(data: data,message: "sin error",statusCode: 0);
+  static HttpResponse<T> success<T>(T data) {
+   HttpError error =  HttpError(data: data,message: "sin error",statusCode: -2);
     return HttpResponse(data,error );
   } 
 
   
-  static HttpResponse fail({
+  static HttpResponse<T> fail<T>({
     required int statusCode, 
     required String message, 
     required dynamic data,
-    }) => HttpResponse(
-      null, 
+    }) {
+     
+     
+    return HttpResponse(
+      null,   //aca era null
       HttpError(
         statusCode: statusCode, 
         message: message, 
         data: data,
         ));
+  }
 }
 
 

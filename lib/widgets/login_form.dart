@@ -1,4 +1,3 @@
- 
 import 'dart:convert';
 
 import 'package:appemcosani/pages/home_page.dart';
@@ -6,6 +5,7 @@ import 'package:appemcosani/utils/responsive.dart';
 import 'package:appemcosani/api/authentication_api.dart';
 
 import 'package:appemcosani/helpers/http_response.dart';
+import 'package:get_it/get_it.dart';
 import 'input_text.dart';
 import 'package:flutter/material.dart';
 import 'package:appemcosani/utils/dialogs.dart';
@@ -19,48 +19,47 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   GlobalKey<FormState> _formkey = GlobalKey();
-  String _email='', _password='';
-  final AuthenticationAPI _authenticationAPI = AuthenticationAPI();
+  String _email = '', _password = '';
+  //final AuthenticationAPI _authenticationAPI = AuthenticationAPI();
 
-  Future<void> _submit() async{
+  Future<void> _submit() async {
     final isOK = _formkey.currentState!.validate();
     print("form isOK: $isOK");
-    if(isOK){
+    if (isOK) {
       //aca se llama a la api rest para el login
-      
+
       ProgressDialog.show(context);
 
-      final HttpResponse response = await _authenticationAPI.login( 
-          email: _email,
-          password: _password,
+      final authenticationAPI = GetIt.instance<AuthenticationAPI>();
+
+      final HttpResponse response = await authenticationAPI.login(
+        email: _email,
+        password: _password,
       );
-       ProgressDialog.dissmiss(context);
-       if(response.data != null){
+      ProgressDialog.dissmiss(context);
+      
+      if (response.data != null) { 
         print("registro ok ${response.data}");
-        Navigator.pushNamedAndRemoveUntil(
-          context, 
-          HomePage.routeName,
-          (_)=> false  //route.settings.name=='perfil',
-          );
-       }else{
-        print("codigo de error: ${response.error.statusCode}" );
+        Navigator.pushNamedAndRemoveUntil(context, HomePage.routeName,
+            (_) => false //route.settings.name=='perfil',
+            );
+      } else {
+        print("codigo de error: ${response.error.statusCode}");
         print("mensaje de error: ${response.error.message}");
         print("datos del error: ${response.error.data}");
 
         String message = response.error.message;
 
-        if(response.error.statusCode == -1){
-          message= "Sin Conexion a Internet";
-        }else if(response.error.statusCode == 404){
-          message= "• ${jsonEncode(response.error.data['message'])} ";
-        }
-        else if(response.error.statusCode == 403){
-          message= "• ${jsonEncode(response.error.data['message'])} ";
+        if (response.error.statusCode == -1) {
+          message = "Sin Conexion a Internet";
+        } else if (response.error.statusCode == 404) {
+          message = "• ${jsonEncode(response.error.data['message'])} ";
+        } else if (response.error.statusCode == 403) {
+          message = "• ${jsonEncode(response.error.data['message'])} ";
         }
 
         Dialogs.alert(context, title: "Error", description: message);
-
-       }
+      }
     }
   }
 
@@ -110,11 +109,11 @@ class _LoginFormState extends State<LoginForm> {
                             responsive.dp(responsive.isTablet ? 1.2 : 1.4),
                         onChanged: (text) {
                           //print("password: $text");
-                          _password=text;
+                          _password = text;
                         },
                         validator: (text) {
-                          if (text!.trim().length==0) {
-                            return ('Contraseña Invalida?');
+                          if (text!.trim().length == 0) {
+                            return ('Contraseña Invalida');
                           }
                           return null;
                         },
@@ -123,7 +122,7 @@ class _LoginFormState extends State<LoginForm> {
                     MaterialButton(
                       padding: EdgeInsets.symmetric(vertical: 10),
                       child: Text(
-                        "Olvidaste tu Contraseña",
+                        "Olvidaste tu Contraseña?",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize:

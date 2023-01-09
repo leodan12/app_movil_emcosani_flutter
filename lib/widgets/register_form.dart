@@ -6,6 +6,7 @@ import 'package:appemcosani/helpers/http_response.dart';
 import 'package:appemcosani/pages/home_page.dart';
 import 'package:appemcosani/utils/dialogs.dart';
 import 'package:appemcosani/utils/responsive.dart';
+import 'package:get_it/get_it.dart';
 
 import 'input_text.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class RegisterForm extends StatefulWidget {
 class _RegisterFormState extends State<RegisterForm> {
   GlobalKey<FormState> _formkey = GlobalKey();
   String _email = '', _password = '', _username = '';
-  final AuthenticationAPI _authenticationAPI = AuthenticationAPI();
+  //final AuthenticationAPI _authenticationAPI = AuthenticationAPI();
 
   Future<void> _submit() async {
     final isOK = _formkey.currentState!.validate();
@@ -28,8 +29,8 @@ class _RegisterFormState extends State<RegisterForm> {
     if (isOK) {
       //aca se llama a la api rest para el registro
       ProgressDialog.show(context);
-
-      final HttpResponse response = await _authenticationAPI.register(
+      final authenticationAPI = GetIt.instance<AuthenticationAPI>();
+      final HttpResponse response = await authenticationAPI.register(
           username: _username,
           email: _email,
           password: _password,
@@ -37,8 +38,8 @@ class _RegisterFormState extends State<RegisterForm> {
        );
        ProgressDialog.dissmiss(context);
 
-       if(response.data != null){
-        print("registro ok ${response.data}");
+       if(response.data != null){ 
+        print("registro ok ${response.data.token}");
         Navigator.pushNamedAndRemoveUntil(
           context, 
           HomePage.routeName,
@@ -120,7 +121,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   _password = text;
                 },
                 validator: (text) {
-                  if (text!.trim().length<5) {
+                  if (text!.trim().length<7) {
                     return ('Contraseña  invalida');
                   }
                   return null;
