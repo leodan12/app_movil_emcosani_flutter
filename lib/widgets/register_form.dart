@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:appemcosani/api/authentication_api.dart';
+import 'package:appemcosani/data/authentication_client.dart';
 import 'package:appemcosani/helpers/http_response.dart';
 import 'package:appemcosani/pages/home_page.dart';
 import 'package:appemcosani/utils/dialogs.dart';
@@ -19,18 +20,21 @@ class RegisterForm extends StatefulWidget {
 }
 
 class _RegisterFormState extends State<RegisterForm> {
+  final _authenticationAPI = GetIt.instance<AuthenticationAPI>();
+  final  _authenticationClient = GetIt.instance<AuthenticationClient>();
+  
   GlobalKey<FormState> _formkey = GlobalKey();
   String _email = '', _password = '', _username = '';
   //final AuthenticationAPI _authenticationAPI = AuthenticationAPI();
 
   Future<void> _submit() async {
     final isOK = _formkey.currentState!.validate();
-    print("form isOK: $isOK");
+    //print("form isOK: $isOK");
     if (isOK) {
       //aca se llama a la api rest para el registro
       ProgressDialog.show(context);
-      final authenticationAPI = GetIt.instance<AuthenticationAPI>();
-      final HttpResponse response = await authenticationAPI.register(
+      
+      final HttpResponse response = await _authenticationAPI.register(
           username: _username,
           email: _email,
           password: _password,
@@ -39,16 +43,17 @@ class _RegisterFormState extends State<RegisterForm> {
        ProgressDialog.dissmiss(context);
 
        if(response.data != null){ 
-        print("registro ok ${response.data.token}");
+        //print("registro ok ${response.data.token}");
+        await _authenticationClient.saveSession(response.data);
         Navigator.pushNamedAndRemoveUntil(
           context, 
           HomePage.routeName,
           (_)=> false //route.settings.name=='perfil',
           );
        }else{
-        print("codigo de error: ${response.error.statusCode}" );
-        print("mensaje de error: ${response.error.message}");
-        print("datos del error: ${response.error.data}");
+        //print("codigo de error: ${response.error.statusCode}" );
+        //print("mensaje de error: ${response.error.message}");
+        //print("datos del error: ${response.error.data}");
 
         String message = response.error.message;
 
