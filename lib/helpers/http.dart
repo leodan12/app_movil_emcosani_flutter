@@ -40,7 +40,7 @@ class Http {
       }else{
       return HttpResponse.success<T>(response.data);}
     } catch (e) {
-      //print( e);
+      print( e);
       int statusCode = -3;
       String message = "Error Desconocido";
       dynamic data;

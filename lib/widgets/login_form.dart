@@ -32,9 +32,7 @@ class _LoginFormState extends State<LoginForm> {
       //aca se llama a la api rest para el login
 
       ProgressDialog.show(context);
-
-      
-
+ 
       final HttpResponse response = await _authenticationAPI.login(
         email: _email,
         password: _password,
@@ -42,7 +40,7 @@ class _LoginFormState extends State<LoginForm> {
       ProgressDialog.dissmiss(context);
       
       if (response.data != null) { 
-        //print("registro ok ${response.data}");
+        //print("login ok ${response.data}");
         await _authenticationClient.saveSession(response.data);
         Navigator.pushNamedAndRemoveUntil(context, HomePage.routeName,
             (_) => false //route.settings.name=='perfil',

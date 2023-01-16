@@ -25,10 +25,15 @@ class _SplashPageState extends State<SplashPage> {
 
   Future<void> _checkLogin() async {
     final token = await _authenticationClient.accessToken; 
+   // final id = await _authenticationClient.accessId; 
     if(token == null){
       Navigator.pushReplacementNamed(context, LoginPage.routeName);
       return ;
     }
+   // else if(id == null){
+    //  Navigator.pushReplacementNamed(context, LoginPage.routeName);
+    //  return ;
+   // }
     Navigator.pushReplacementNamed(context, HomePage.routeName);
   }
 
