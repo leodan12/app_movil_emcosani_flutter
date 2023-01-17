@@ -1,9 +1,11 @@
  
 import 'package:appemcosani/helpers/dependency_injection.dart';
 import 'package:appemcosani/pages/home_page.dart';
+import 'package:appemcosani/pages/inicio_page.dart';
 import 'package:appemcosani/pages/login_page.dart';
 import 'package:appemcosani/pages/register_page.dart';
 import 'package:appemcosani/pages/splash_page.dart';
+import 'package:appemcosani/pages/ventas_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -36,6 +38,8 @@ class MyApp extends StatelessWidget {
         RegisterPage.routeName:(_) => RegisterPage(),
         LoginPage.routeName:(_) => LoginPage(),
         HomePage.routeName:(_) => HomePage(),
+        VentasPage.routeName:(_) => VentasPage(),
+        InicioPage.routeName:(_) => InicioPage(),
       },
     );
   }

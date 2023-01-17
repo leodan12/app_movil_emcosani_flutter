@@ -1,12 +1,19 @@
 import 'package:appemcosani/api/user_data.dart';
 import 'package:appemcosani/data/authentication_client.dart';
+import 'package:appemcosani/pages/inicio_home.dart';
+import 'package:appemcosani/pages/grafico.dart';
+import 'package:appemcosani/pages/inicio_page.dart';
+import 'package:appemcosani/pages/lineal_chart.dart';
 import 'package:appemcosani/pages/login_page.dart';
+import 'package:appemcosani/pages/productos_page.dart';
+import 'package:appemcosani/pages/ventas_page.dart';
 import 'package:appemcosani/utils/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = 'home';
+ 
   const HomePage({super.key});
 
   @override
@@ -19,6 +26,7 @@ class _HomePageState extends State<HomePage> {
   var miIdUser = 1;
   var miNameUser = "mi Nombre";
   var miEmailUser = "mi Email";
+ 
 
   @override
   void initState() {
@@ -30,15 +38,9 @@ class _HomePageState extends State<HomePage> {
     final id = await _authenticationClient.accessId;
     final name = await _authenticationClient.accessName;
     final email = await _authenticationClient.accessEmail;
-    if (id != null) {
-      miIdUser = id;
-    }
-    if (name != null) {
-      miNameUser = name;
-    }
-    if (email != null) {
-      miEmailUser = email;
-    }
+    if (id != null)   miIdUser = id; 
+    if (name != null)    miNameUser = name; 
+    if (email != null)   miEmailUser = email; 
     setState(() {});
   }
 
@@ -51,29 +53,46 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  int _selectDrawerItem = 0;
+  _getDrawerItemWidget(int pos){
+    switch(pos){
+      case 0: return MiInicio();
+      case 1: return LinearChart(); 
+      case 2: return LinearChart() ;
+      case 3: return Grafico();
+      case 4: return ProductoPage();
+    }
+  }
+
+  _onSelectItem(int pos){
+    
+    Navigator.of(context).pop();
+    setState(() { 
+      _selectDrawerItem = pos;
+     });
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     final Responsive responsive = Responsive.of(context);
 
+    var seriesList = null;
     return Scaffold(
       drawer: Drawer(
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Colors.green, Colors.blue],
-            ),
-          ),
-          child: Column(
-            children: [
-              Container(
-                margin: EdgeInsets.all(responsive.hp(5)),
-                child: ClipOval(
-                  child: Image.network(
-                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKvoqmKhRuuCjPmGxrUjfZ6grgZg7wP2Vya17z5q-4l86XEgeot4rc_buraKavb7OFfiA&usqp=CAU"),
-                ),
-              ),
+        child:  ListView(
+          
+          children: <Widget> [
+             
+              Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(responsive.hp(5)),
+                    child: ClipOval(
+                      child: Image.network(
+                          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKvoqmKhRuuCjPmGxrUjfZ6grgZg7wP2Vya17z5q-4l86XEgeot4rc_buraKavb7OFfiA&usqp=CAU"),
+                    ),
+                  ), 
               Text(
                 "Mis Datos",
                 style: TextStyle(
@@ -102,104 +121,65 @@ class _HomePageState extends State<HomePage> {
               SizedBox(
                 height: responsive.dp(2),
               ),
-               
-              SizedBox(
-                height: responsive.dp(3),
-              ),
-              Container(
-                margin: EdgeInsets.only(bottom:responsive.hp(1) ),
-                width: double.infinity,
-                child: MaterialButton(
-                  onPressed: () {},
-                  color: Colors.blue.shade300,
-                  child: Text(
-                    "INICIO",
-                    style: TextStyle(
-                      fontSize: responsive.dp(1.5),
-                    ),
-                  ),
+               ], 
+               ),
+            Container(
+              margin: EdgeInsets.only(
+                  top: responsive.hp(5),
+                  bottom: responsive.hp(1),
                 ),
-              ),
-              Text(
-                "REPORTES",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: responsive.dp(1.5),
-                ),
-              ),
-              SizedBox(
-                height: responsive.dp(1),
-              ),
-              Container(
-                width: double.infinity,
-                child: MaterialButton(
-                  onPressed: () {},
-                  color: Colors.blue.shade300,
-                  child: Text(
-                    "VENTAS",
-                    style: TextStyle(
-                      fontSize: responsive.dp(1.5),
-                    ),
-                  ),
-                ),
-              ),
-               Container(
-                width: double.infinity,
-                child: MaterialButton(
-                  onPressed: () {},
-                  color: Colors.blue.shade300,
-                  child: Text(
-                    "COMPRAS",
-                    style: TextStyle(
-                      fontSize: responsive.dp(1.5),
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                child: MaterialButton(
-                  onPressed: () {},
-                  color: Colors.blue.shade300,
-                  child: Text(
-                    "PRODUCTOS",
-                    style: TextStyle(
-                      fontSize: responsive.dp(1.5),
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                child: MaterialButton(
-                  onPressed: () {},
-                  color: Colors.blue.shade300,
-                  child: Text(
-                    "INVENTARIOS",
-                    style: TextStyle(
-                      fontSize: responsive.dp(1.5),
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(child: Container(),),
-              Container(
-                width: double.infinity, 
-                margin: EdgeInsets.only(top: responsive.hp(0.01), bottom: responsive.hp(1),), 
-                child: MaterialButton(
-                  color: Colors.red.shade300,
-                  onPressed: () => _singOut(),
-                  child: Text(
-                    "Salir",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: responsive.dp(1.5),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+              child: Center(
+                child: Text("Reportes"))), 
+            ListTile(
+             title: Text('Inicio'),
+             leading: Icon(Icons.card_travel),
+             selected: (0 == _selectDrawerItem),
+             onTap: (){  
+              _onSelectItem(0);
+              },
+            ),
+            ListTile(
+             title: Text('Ventas'),
+             leading: Icon(Icons.card_travel),
+             selected: (1 == _selectDrawerItem),
+             onTap: (){  
+              _onSelectItem(1);
+              },
+            ),
+            ListTile(
+             title: Text('Compras'),
+            leading: Icon(Icons.event_busy),
+             selected: (2 == _selectDrawerItem),
+             onTap: (){
+              _onSelectItem(2);
+              }, 
+            ),
+            Divider(),
+            ListTile(
+             title: Text('Inventarios'),
+            leading: Icon(Icons.event_busy),
+             selected: (3 == _selectDrawerItem),
+             onTap: (){
+              _onSelectItem(3);
+              }, 
+            ),
+            ListTile(
+             title: Text('Productos'),
+            leading: Icon(Icons.event_busy),
+             selected: (4 == _selectDrawerItem),
+             onTap: (){
+              _onSelectItem(4);
+              }, 
+            ),
+             Divider(),
+             ListTile(
+             title: Text('Salir'),
+            leading: Icon(Icons.exit_to_app),
+             onTap: (){
+             _singOut();
+              }, 
+            ), 
+          ],
         ),
       ),
       appBar: AppBar(
@@ -208,18 +188,10 @@ class _HomePageState extends State<HomePage> {
           //width: double.infinity,
         ),
       ),
-      body: Container(
-        width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            MaterialButton(
-              onPressed: () => _singOut(),
-              child: Text("Salir"),
-            ),
-          ],
-        ),
-      ),
+      body: _getDrawerItemWidget(_selectDrawerItem),
+    
     );
   }
 }
+
+ 
